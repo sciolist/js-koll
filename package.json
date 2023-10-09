@@ -1,0 +1,27 @@
+{
+  "name": "koll",
+  "version": "0.1.5",
+  "description": "basic tracing, logging and measurements intended for Grafana Faro",
+  "main": "index.js",
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "esbuild *.ts */*.ts --outdir=.",
+    "check-minimal-size": "npm run build; esbuild examples/bundle-minimal-test.js --minify --bundle | wc -c ; esbuild examples/bundle-minimal-test.js --define:window=1 --minify --bundle | gzip | wc -c",
+    "check-large-size": "npm run build; esbuild examples/bundle-large-test.js --minify --bundle | wc -c ; esbuild examples/bundle-large-test.js --define:window=1 --minify --bundle | gzip | wc -c"
+  },
+  "engines": {
+    "node": "^18.0.0"
+  },
+  "keywords": [],
+  "author": "jdp",
+  "license": "ISC",
+  "repository": {
+    "url": "https://github.com/sciolist/js-koll.git"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.3",
+    "esbuild": "^0.15.13"
+  }
+}
