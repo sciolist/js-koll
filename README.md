@@ -202,8 +202,7 @@ stop();
 
 The size of the library will vary a bit based on your usage, there are a couple of files in examples that configure koll differently.
 
-In `v0.0.1`:  
+In `v0.1.5`:  
 `bundle-minimal-test.js is 5.7kb, 2.5kb gzipped.`  
 `bundle-large-test.js   is 8.9kb, 3.6kb gzipped.`  
 
-This does not include any polyfills you may need.
