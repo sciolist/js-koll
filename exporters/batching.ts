@@ -48,9 +48,7 @@ export function batchingExporter(exporter: ExportFunction, options?: BatchingExp
             exporter(...batch);
         }
     }
-    if (typeof process !== 'undefined') {
-        process.on('exit', processBatch);
-    } else if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') {
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'hidden') {
                 processBatch();
@@ -59,6 +57,8 @@ export function batchingExporter(exporter: ExportFunction, options?: BatchingExp
         document.addEventListener('pagehide', () => {
             processBatch();
         });
+    } else if (typeof process !== 'undefined' && process.on) {
+        process.on('exit', processBatch);
     }
     return function batchingExporter(...events: Array<ExportItem>) {
         pending.push(...events);

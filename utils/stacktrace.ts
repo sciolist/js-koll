@@ -1,9 +1,8 @@
 export interface ErrorFrame {
-    function?: string;
-    filename?: string;
-    module?: string;
-    lineno?: number;
-    colno?: number;
+    functionName?: string;
+    fileName?: string;
+    lineNumber?: number;
+    columnNumber?: number;
 }
 
 export interface ErrorStack {
@@ -58,7 +57,7 @@ export function parseStackTrace(stack: string): ErrorStack | undefined {
                 .replace(/\(eval code/g, '(')
                 .replace(/^.*?\s+/, '');
             const functionName = sanitizedLine.endsWith(')') ? sanitizedLine.replace(/\s.+/, '') : undefined;
-            const locationParts = sanitizedLine.match(/(?:^|\b)(https?:.+?)(?::(\d+):(\d+))?(?:\)|$)/) ?? [
+            const locationParts = sanitizedLine.match(/(?:^|\b)((?:file|https?):.+?)(?::(\d+):(\d+))?(?:\)|$)/) ?? [
                 null,
                 sanitizedLine,
                 -1,
@@ -67,9 +66,9 @@ export function parseStackTrace(stack: string): ErrorStack | undefined {
 
             return {
                 fileName: locationParts[1],
-                function: functionName ?? '<anonymous>',
-                colno: locationParts[2] ? Number(locationParts[2]) : undefined,
-                lineno: locationParts[3] ? Number(locationParts[3]) : undefined,
+                functionName: functionName ?? '<anonymous>',
+                lineNumber: locationParts[2] ? Number(locationParts[2]) : undefined,
+                columnNumber: locationParts[3] ? Number(locationParts[3]) : undefined,
             };
         });
 
@@ -82,7 +81,7 @@ export function parseStackTrace(stack: string): ErrorStack | undefined {
             .map((l) => {
                 // don't fail on eval functions in safari
                 if (l.indexOf('@') === -1 && l.indexOf(':') === -1) {
-                    return { function: l };
+                    return { functionName: l };
                 }
 
                 const functionNameRegex = /((.*".+"[^@]*)?[^@]*)(?:@)/;
@@ -94,7 +93,7 @@ export function parseStackTrace(stack: string): ErrorStack | undefined {
                 if (locationBase.indexOf(':') === -1) {
                     return {
                         fileName: locationBase,
-                        function: functionName,
+                        functionName: functionName,
                     };
                 }
 
@@ -102,9 +101,9 @@ export function parseStackTrace(stack: string): ErrorStack | undefined {
                 const locationParts = locationBase.replace(/[()]/g, '').match(/(.+?)(?::(\d+))?(?::(\d+))?$/) as any;
                 return {
                     fileName: locationParts[1],
-                    function: functionName,
-                    colno: locationParts[2] ? Number(locationParts[2]) : undefined,
-                    lineno: locationParts[3] ? Number(locationParts[3]) : undefined,
+                    functionName: functionName,
+                    lineNumber: locationParts[2] ? Number(locationParts[2]) : undefined,
+                    columnNumber: locationParts[3] ? Number(locationParts[3]) : undefined,
                 };
             })
             .filter((v) => v);

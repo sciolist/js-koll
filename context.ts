@@ -311,7 +311,7 @@ export function tracer(exporter: ExportFunction, parent?: ParentSpan): Tracer {
     return {
         error: (scope: InstrumentationScope, ex: Error) => error(exporter, scope, parent, ex),
         log: (scope: InstrumentationScope, severity: number, message: string, record?: Partial<LogRecord>) =>
-            log(exporter, scope, severity, message, record),
+            log(exporter, scope, severity, message, parent, record),
         measurement: (scope: InstrumentationScope, name: string, unit: string, value: number, context?: any) =>
             measurement(exporter, scope, name, unit, value, context),
         span: (scope: InstrumentationScope, details?: Partial<Span>) => span(exporter, scope, parent, details),
@@ -320,13 +320,15 @@ export function tracer(exporter: ExportFunction, parent?: ParentSpan): Tracer {
     };
 }
 
+const voidFn = () => Promise.resolve();
+
 /** A dummy tracer that does not log anything. */
 export const dummyTracer = {
-    error: () => Promise.resolve(),
-    log: () => Promise.resolve(),
-    measurement: () => Promise.resolve(),
-    span: () => Promise.resolve(),
-    run: <T>(scope: InstrumentationScope, fn: (span: RunningSpan) => Promise<T>) => runSpan(null, scope, null, fn),
+    error: voidFn,
+    log: voidFn,
+    measurement: voidFn,
+    span: voidFn,
+    run: <T>(scope: InstrumentationScope, fn: (span: RunningSpan) => Promise<T>) => runSpan(voidFn, scope, null, fn),
 }
 
 function makeParentObj(span: ParentSpan) {
