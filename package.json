@@ -1,6 +1,6 @@
 {
   "name": "koll",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "basic tracing, logging and measurements intended for Grafana Faro",
   "main": "index.js",
   "type": "module",
