@@ -11,9 +11,6 @@
     "check-minimal-size": "npm run build; esbuild examples/bundle-minimal-test.js --minify --bundle | wc -c ; esbuild examples/bundle-minimal-test.js --define:window=1 --minify --bundle | gzip | wc -c",
     "check-large-size": "npm run build; esbuild examples/bundle-large-test.js --minify --bundle | wc -c ; esbuild examples/bundle-large-test.js --define:window=1 --minify --bundle | gzip | wc -c"
   },
-  "engines": {
-    "node": "^18.0.0"
-  },
   "keywords": [],
   "author": "jdp",
   "license": "ISC",
